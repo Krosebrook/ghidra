@@ -1,0 +1,16 @@
+{
+  "name": "ghidra-triage-marketplace",
+  "owner": {
+    "name": "Kyle Rosebrook"
+  },
+  "plugins": [
+    {
+      "name": "ghidra-triage",
+      "source": "./",
+      "description": "Triage a suspicious binary into a structured report with Ghidra in a no-network container."
+    }
+  ],
+  "metadata": {
+    "description": "Ghidra binary triage for Claude Code"
+  }
+}

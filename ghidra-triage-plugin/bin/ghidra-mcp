@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Starts pyghidra-mcp over stdio inside a locked-down container.
+# Claude Code runs this as the plugin's MCP server. Samples are untrusted:
+# no network, no capabilities, read-only sample mount, non-root user.
+set -euo pipefail
+
+# Pinned by digest (OCI index for tag 0.2.7). Change only on purpose.
+DEFAULT_IMAGE="ghcr.io/clearbluejar/pyghidra-mcp:0.2.7@sha256:f433dd622b4b1c9637476a6ad4bde310ae63b661838c50eaf7d62a8402e73fa9"
+IMAGE="${GHIDRA_TRIAGE_IMAGE:-$DEFAULT_IMAGE}"
+SAMPLES="${GHIDRA_TRIAGE_SAMPLES:-$HOME/ghidra-samples}"
+MEMORY="${GHIDRA_TRIAGE_MEMORY:-4g}"
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo "ghidra-triage: docker is not on PATH. Install Docker and start it." >&2
+  exit 1
+fi
+
+if [ ! -d "$SAMPLES" ]; then
+  echo "ghidra-triage: sample folder $SAMPLES does not exist. Create it or set GHIDRA_TRIAGE_SAMPLES." >&2
+  exit 1
+fi
+
+# The Ghidra project lives in the container's own filesystem and is
+# discarded by --rm, so nothing a sample produces persists on the host.
+exec docker run -i --rm \
+  --network none \
+  --cap-drop ALL \
+  --security-opt no-new-privileges \
+  --user vscode \
+  --memory "$MEMORY" \
+  --pids-limit 512 \
+  --mount "type=bind,source=$SAMPLES,target=/samples,readonly" \
+  "$IMAGE" \
+  -t stdio \
+  --project-path /home/vscode/triage-project \
+  --project-name triage

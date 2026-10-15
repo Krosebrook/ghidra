@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__plugin_ghidra-triage_ghidra__(rename_function|rename_variable|set_variable_type|set_function_prototype|set_comment|delete_project_binary)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/deny-mutation.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}
