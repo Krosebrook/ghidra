@@ -1,0 +1,10 @@
+{
+  "name": "ghidra-triage",
+  "version": "0.1.0",
+  "description": "Triage a suspicious binary into a structured report with Ghidra, via pyghidra-mcp running in a Docker container with no network.",
+  "author": {
+    "name": "Kyle Rosebrook"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["ghidra", "reverse-engineering", "malware-triage", "mcp"]
+}
